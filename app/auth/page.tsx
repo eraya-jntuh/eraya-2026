@@ -35,22 +35,13 @@ export default function AuthPage() {
   // Check if already logged in
   useEffect(() => {
     const checkSession = async () => {
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:37',message:'Auth page session check started',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
       try {
         const { data: { session } } = await supabase.auth.getSession()
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:40',message:'Session check result',data:{hasSession:!!session,userId:session?.user?.id,userEmail:session?.user?.email},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
         if (session) {
           setUser(session.user)
         }
       } catch (error: any) {
         console.error("Session check error:", error)
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:47',message:'Session check error',data:{errorMessage:error?.message,errorName:error?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
       } finally {
         setIsChecking(false)
       }
@@ -60,9 +51,6 @@ export default function AuthPage() {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:57',message:'Auth state changed',data:{event:_event,hasSession:!!session,userId:session?.user?.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
       setUser(session?.user ?? null)
     })
 
@@ -74,18 +62,12 @@ export default function AuthPage() {
     setIsLoading(true)
     setError("")
     setSuccess("")
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:60',message:'handleSignIn called',data:{hasEmail:!!email,hasPassword:!!password},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-    // #endregion
 
     try {
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:70',message:'SignIn response',data:{hasError:!!signInError,hasSession:!!data?.session,errorMessage:signInError?.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
 
       if (signInError) {
         setError(signInError.message)
@@ -94,9 +76,6 @@ export default function AuthPage() {
       }
 
       if (data.session) {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:78',message:'SignIn success',data:{userId:data.user?.id,userEmail:data.user?.email},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
         setSuccess("Successfully signed in!")
         setUser(data.user)
         setTimeout(() => {
@@ -106,9 +85,6 @@ export default function AuthPage() {
       }
     } catch (err: any) {
       console.error("Sign in error:", err)
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:88',message:'SignIn exception',data:{errorMessage:err?.message,errorName:err?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
       setError("An unexpected error occurred. Please try again.")
       setIsLoading(false)
     }
@@ -119,9 +95,6 @@ export default function AuthPage() {
     setIsLoading(true)
     setError("")
     setSuccess("")
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:105',message:'handleSignUp called',data:{hasEmail:!!email,hasPassword:!!password,hasFullName:!!fullName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-    // #endregion
 
     try {
       const { data, error: signUpError } = await supabase.auth.signUp({
@@ -133,9 +106,6 @@ export default function AuthPage() {
           },
         },
       })
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:120',message:'SignUp response',data:{hasError:!!signUpError,hasUser:!!data?.user,errorMessage:signUpError?.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
 
       if (signUpError) {
         setError(signUpError.message)
@@ -144,14 +114,8 @@ export default function AuthPage() {
       }
 
       if (data.user) {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:130',message:'SignUp success',data:{userId:data.user?.id,userEmail:data.user?.email},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
         
         // Create profile if it doesn't exist
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:147',message:'Creating profile started',data:{userId:data.user.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
         const { error: profileError } = await supabase
           .from('profiles')
           .upsert({
@@ -161,15 +125,9 @@ export default function AuthPage() {
           }, {
             onConflict: 'id'
           })
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:155',message:'Profile creation result',data:{hasError:!!profileError,errorMessage:profileError?.message,errorCode:profileError?.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
         
         if (profileError) {
           console.error('Profile creation error:', profileError)
-          // #region agent log
-          fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:159',message:'Profile creation failed',data:{errorMessage:profileError.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-          // #endregion
         }
         
         setSuccess("Account created! Please check your email to verify your account.")
@@ -181,9 +139,6 @@ export default function AuthPage() {
       }
     } catch (err: any) {
       console.error("Sign up error:", err)
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/auth/page.tsx:141',message:'SignUp exception',data:{errorMessage:err?.message,errorName:err?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
       setError("An unexpected error occurred. Please try again.")
       setIsLoading(false)
     }

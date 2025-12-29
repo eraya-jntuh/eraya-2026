@@ -43,19 +43,10 @@ export default function AdminDashboard() {
   }, [])
 
   const checkAuth = async () => {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:45',message:'Admin auth check started',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-    // #endregion
     try {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:47',message:'Admin session check result',data:{hasSession:!!session,hasError:!!sessionError,errorMessage:sessionError?.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-      // #endregion
       
       if (!session) {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:50',message:'No session - redirecting to login',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-        // #endregion
         router.push("/admin/login")
         return
       }
@@ -66,15 +57,9 @@ export default function AdminDashboard() {
         .select('role')
         .eq('id', session.user.id)
         .single()
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:55',message:'Admin profile check result',data:{hasProfile:!!profile,hasError:!!error,role:profile?.role,errorMessage:error?.message,errorCode:error?.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-      // #endregion
 
       // If profile doesn't exist, create it (fallback)
       if (error && error.code === 'PGRST116' || !profile) {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:63',message:'Profile missing - creating fallback profile',data:{userId:session.user.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-        // #endregion
         const { data: newProfile, error: createError } = await supabase
           .from('profiles')
           .upsert({
@@ -85,13 +70,7 @@ export default function AdminDashboard() {
           })
           .select('role')
           .single()
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:72',message:'Fallback profile creation result',data:{hasProfile:!!newProfile,hasError:!!createError,errorMessage:createError?.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-        // #endregion
         if (createError || !newProfile) {
-          // #region agent log
-          fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:75',message:'Fallback profile creation failed',data:{errorMessage:createError?.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-          // #endregion
           await supabase.auth.signOut()
           router.push("/admin/login")
           return
@@ -100,24 +79,15 @@ export default function AdminDashboard() {
       }
 
       if (error || !profile || profile.role !== 'admin') {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:61',message:'Not admin - redirecting to login',data:{role:profile?.role},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-        // #endregion
         await supabase.auth.signOut()
         router.push("/admin/login")
         return
       }
 
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:67',message:'Auth check passed - fetching data',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-      // #endregion
       setIsAuthenticated(true)
       fetchData()
     } catch (error: any) {
       console.error("Auth check error:", error)
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:70',message:'Auth check exception',data:{errorMessage:error?.message,errorName:error?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
-      // #endregion
       router.push("/admin/login")
     } finally {
       setIsLoading(false)
@@ -126,48 +96,27 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     setIsFetching(true)
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:77',message:'Fetching admin data started',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'I'})}).catch(()=>{});
-    // #endregion
     try {
       const [regRes, msgRes] = await Promise.all([
         fetch("/api/admin/registrations"),
         fetch("/api/admin/messages"),
       ])
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:81',message:'Admin API responses received',data:{regStatus:regRes.status,regOk:regRes.ok,msgStatus:msgRes.status,msgOk:msgRes.ok},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'I'})}).catch(()=>{});
-      // #endregion
 
       if (regRes.ok) {
         const regData = await regRes.json()
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:85',message:'Registrations data parsed',data:{hasRegistrations:!!regData.registrations,count:regData.registrations?.length||0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'I'})}).catch(()=>{});
-        // #endregion
         setRegistrations(regData.registrations || [])
       } else {
-        // #region agent log
         const regErrorData = await regRes.json().catch(()=>({}));
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:88',message:'Registrations fetch failed',data:{status:regRes.status,error:regErrorData.error},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'I'})}).catch(()=>{});
-        // #endregion
       }
 
       if (msgRes.ok) {
         const msgData = await msgRes.json()
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:93',message:'Messages data parsed',data:{hasMessages:!!msgData.messages,count:msgData.messages?.length||0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'I'})}).catch(()=>{});
-        // #endregion
         setMessages(msgData.messages || [])
       } else {
-        // #region agent log
         const msgErrorData = await msgRes.json().catch(()=>({}));
-        fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:97',message:'Messages fetch failed',data:{status:msgRes.status,error:msgErrorData.error},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'I'})}).catch(()=>{});
-        // #endregion
       }
     } catch (error: any) {
       console.error("Fetch error:", error)
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/admin/page.tsx:100',message:'Fetch exception',data:{errorMessage:error?.message,errorName:error?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'I'})}).catch(()=>{});
-      // #endregion
     } finally {
       setIsFetching(false)
     }

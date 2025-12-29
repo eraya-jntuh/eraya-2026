@@ -98,9 +98,6 @@ function ContactForm() {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus({ type: null, message: '' })
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/contact-section.tsx:97',message:'Contact form submission started',data:{hasName:!!formData.name,hasEmail:!!formData.email,hasMessage:!!formData.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-    // #endregion
 
     try {
       const response = await fetch('/api/contact', {
@@ -110,14 +107,8 @@ function ContactForm() {
         },
         body: JSON.stringify(formData),
       })
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/contact-section.tsx:111',message:'Contact API response received',data:{status:response.status,statusText:response.statusText,ok:response.ok},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
 
       const data = await response.json()
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/contact-section.tsx:114',message:'Contact response data parsed',data:{hasError:!!data.error,hasSuccess:!!data.success,errorMessage:data.error},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
 
       if (!response.ok) {
         // Handle validation errors
@@ -138,9 +129,6 @@ function ContactForm() {
       }
 
       // Success
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/contact-section.tsx:132',message:'Contact success',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
       setSubmitStatus({ type: 'success', message: 'Message sent successfully! We will get back to you soon.' })
       // Reset form
       setFormData({ name: "", email: "", phone: "", message: "" })
@@ -151,9 +139,6 @@ function ContactForm() {
       }, 5000)
     } catch (error: any) {
       console.error('Contact form error:', error)
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/contact-section.tsx:142',message:'Contact exception',data:{errorMessage:error?.message,errorName:error?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
       setSubmitStatus({ 
         type: 'error', 
         message: 'Network error. Please check your connection and try again.' 

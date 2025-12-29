@@ -81,9 +81,6 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
     setErrors({})
 
     try {
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/registration-form.tsx:84',message:'Form submission started',data:{eventName,hasEmail:!!formData.email,hasTransactionId:!!formData.transactionId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
       const response = await fetch('/api/registrations', {
         method: 'POST',
         headers: {
@@ -101,14 +98,8 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
           transactionId: formData.transactionId,
         }),
       })
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/registration-form.tsx:103',message:'API response received',data:{status:response.status,statusText:response.statusText,ok:response.ok},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
 
       const data = await response.json()
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/registration-form.tsx:106',message:'Response data parsed',data:{hasError:!!data.error,hasSuccess:!!data.success,errorMessage:data.error},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
 
       if (!response.ok) {
         // Handle validation errors
@@ -141,15 +132,9 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
       }
 
       // Success
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/registration-form.tsx:135',message:'Registration success',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
       setShowSuccess(true)
     } catch (error: any) {
       console.error('Registration error:', error)
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/0d240b8c-3781-4b8a-a243-fe0587445adc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'components/registration-form.tsx:140',message:'Registration exception',data:{errorMessage:error?.message,errorName:error?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
       setErrors({ 
         transactionId: 'Network error. Please check your connection and try again.' 
       })

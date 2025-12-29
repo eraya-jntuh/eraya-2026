@@ -22,10 +22,12 @@ A modern, responsive website for **Eraya 2026**, JNTUH's Cultural and Club Fest.
 
 ### 📝 Registration System
 - **Online Registration**: User-friendly registration form with validation
-- **Transaction Tracking**: Transaction ID tracking for payment verification
+- **Payment Integration**: Secure Razorpay payment processing
+- **Server-Side Pricing**: All entry fees calculated server-side from events table
 - **Duplicate Prevention**: Automatic detection and prevention of duplicate registrations
 - **Data Collection**: Comprehensive participant information (name, email, phone, college, year, branch)
 - **Database Integration**: Secure storage in Supabase with Row Level Security (RLS)
+- **Payment Status Tracking**: Real-time payment status updates via webhooks
 
 ### 📧 Contact System
 - **Contact Form**: Quick contact form with validation
@@ -79,6 +81,8 @@ A modern, responsive website for **Eraya 2026**, JNTUH's Cultural and Club Fest.
   - Authentication
   - Row Level Security (RLS)
   - Real-time capabilities
+- **Razorpay** - Payment gateway integration
+- **Upstash Redis** - Distributed rate limiting
 
 ### Development Tools
 - **ESLint** - Code linting
@@ -113,10 +117,21 @@ A modern, responsive website for **Eraya 2026**, JNTUH's Cultural and Club Fest.
    cp env.example .env.local
    ```
    
-   Edit `.env.local` and add your Supabase credentials:
+   Edit `.env.local` and add your credentials:
    ```env
+   # Supabase
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   
+   # Razorpay (for payments)
+   RAZORPAY_KEY_ID=your_razorpay_key_id
+   RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+   RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
+   NEXT_PUBLIC_RAZORPAY_KEY_ID=your_public_key_id
+   
+   # Upstash Redis (for rate limiting)
+   UPSTASH_REDIS_REST_URL=your_redis_url
+   UPSTASH_REDIS_REST_TOKEN=your_redis_token
    ```
 
 4. **Run the development server**
@@ -193,6 +208,7 @@ eraya-2026/
 │   ├── api/                # API routes
 │   │   ├── admin/          # Admin API endpoints
 │   │   ├── contact/        # Contact form API
+│   │   ├── payments/       # Payment API endpoints
 │   │   └── registrations/  # Registration API
 │   ├── auth/               # Authentication pages
 │   └── page.tsx            # Home page
@@ -286,6 +302,10 @@ eraya-2026/
 ### Public APIs
 - `POST /api/registrations` - Submit event registration
 - `POST /api/contact` - Submit contact form
+- `POST /api/payments/create-order` - Create Razorpay payment order
+
+### Payment APIs
+- `POST /api/payments/webhook` - Razorpay webhook handler (verifies payment status)
 
 ### Admin APIs (Protected)
 - `GET /api/admin/registrations` - Get all registrations
@@ -332,8 +352,11 @@ For questions or support, contact the festival coordinators through the contact 
 - [x] Authentication system
 - [x] Database integration
 - [x] Test suites
+- [x] Payment gateway integration (Razorpay)
+- [x] Server-side pricing validation
+- [x] Webhook-based payment verification
+- [x] Distributed rate limiting
 - [ ] Email notifications
-- [ ] Payment gateway integration
 - [ ] Real-time updates
 - [ ] Analytics dashboard
 
