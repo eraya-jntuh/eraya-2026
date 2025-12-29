@@ -78,10 +78,69 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
     }
 
     setIsSubmitting(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsSubmitting(false)
-    setShowSuccess(true)
+    setErrors({})
+
+    try {
+      const response = await fetch('/api/registrations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventName,
+          entryFee,
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          college: formData.college,
+          year: formData.year,
+          branch: formData.branch,
+          transactionId: formData.transactionId,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        // Handle validation errors
+        if (response.status === 400 && data.details) {
+          const validationErrors: Record<string, string> = {}
+          data.details.forEach((err: { path: string[]; message: string }) => {
+            const field = err.path[0]
+            validationErrors[field] = err.message
+          })
+          setErrors(validationErrors)
+          setIsSubmitting(false)
+          return
+        }
+
+        // Handle duplicate registration
+        if (response.status === 409) {
+          setErrors({ 
+            email: data.error || 'You have already registered for this event with this email address' 
+          })
+          setIsSubmitting(false)
+          return
+        }
+
+        // Generic error
+        setErrors({ 
+          transactionId: data.error || 'Failed to submit registration. Please try again.' 
+        })
+        setIsSubmitting(false)
+        return
+      }
+
+      // Success
+      setShowSuccess(true)
+    } catch (error: any) {
+      console.error('Registration error:', error)
+      setErrors({ 
+        transactionId: 'Network error. Please check your connection and try again.' 
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const inputClasses =

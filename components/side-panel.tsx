@@ -1,8 +1,10 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { X, ChevronRight, Instagram, Linkedin, Twitter } from "lucide-react"
+import { X, ChevronRight, Instagram, Linkedin, Twitter, User, LogOut } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { supabase } from "@/lib/supabase/client"
 
 const mainLinks = [
   { label: "Home", href: "#" },
@@ -23,12 +25,37 @@ const events = [
 ]
 
 export function SidePanel({ onClose }: { onClose: () => void }) {
+  const router = useRouter()
+  const [user, setUser] = useState<any>(null)
+
   useEffect(() => {
     document.body.style.overflow = "hidden"
     return () => {
       document.body.style.overflow = ""
     }
   }, [])
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setUser(session?.user ?? null)
+    }
+
+    checkUser()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    setUser(null)
+    router.refresh()
+    onClose()
+  }
 
   return (
     <>
@@ -82,6 +109,44 @@ export function SidePanel({ onClose }: { onClose: () => void }) {
                   </span>
                 </motion.a>
               ))}
+              
+              {/* Auth Link */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: mainLinks.length * 0.1 }}
+                className="border-t border-gold/20 pt-4"
+              >
+                {user ? (
+                  <div className="space-y-2">
+                    <div className="rounded-lg bg-maroon/50 px-3 py-2 text-sm text-cream/80">
+                      {user.email}
+                    </div>
+                    <motion.button
+                      onClick={handleSignOut}
+                      className="group flex w-full items-center gap-3 font-serif text-lg uppercase tracking-wider text-gold transition-colors hover:text-gold-light"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      <span className="relative">
+                        SIGN OUT
+                        <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gold transition-all duration-300 group-hover:w-full" />
+                      </span>
+                    </motion.button>
+                  </div>
+                ) : (
+                  <motion.a
+                    href="/auth"
+                    onClick={onClose}
+                    className="group flex items-center gap-3 font-serif text-lg uppercase tracking-wider text-gold transition-colors hover:text-gold-light"
+                  >
+                    <User className="h-5 w-5" />
+                    <span className="relative">
+                      SIGN IN
+                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gold transition-all duration-300 group-hover:w-full" />
+                    </span>
+                  </motion.a>
+                )}
+              </motion.div>
             </nav>
           </div>
 
