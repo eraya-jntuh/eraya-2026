@@ -2,6 +2,7 @@ import type { RegistrationInput } from '@/lib/server/schemas/registration'
 import { insertRegistration } from '@/lib/server/repos/registrations-repo'
 import { validateEvent, getServerSideEntryFee } from './events-service'
 import { getIdempotencyRecord, storeIdempotencyRecord, hashRequest } from '@/lib/server/repos/idempotency-repo'
+import { EmailService } from './email-service'
 
 export interface SubmitRegistrationResult {
   success: boolean
@@ -68,6 +69,25 @@ export async function submitRegistration(
     const responseBody = JSON.stringify({ success: true, message: 'Registration submitted successfully' })
     await storeIdempotencyRecord(input.idempotencyKey, requestHash, 201, responseBody)
   }
+
+  // Step 6: Send confirmation email (Async - fire and forget)
+  // We don't await this to keep response fast
+  /* const { EmailService } = await import('./email-service'); 
+     Dynamic import to avoid circular dep if any, but standard import should be fine 
+     if email-service doesn't import this.
+     Actually, let's use standard import.
+  */
+
+  // Checking imports... registration-service doesn't seem to have circular deps with email-service.
+  // Adding the import at the top is cleaner, but I'll add the call here.
+  // Wait, I need to add the import statement at the top of the file too.
+
+  // Since replace_file_content works on a block, I should probably use multi_replace.
+  // I will restart this call with multi_replace.
+
+  // Step 6: Send confirmation email (Async - fire and forget)
+  EmailService.sendRegistrationEmail(input.email, input.fullName, input.eventName)
+    .catch(err => console.error('Failed to send registration email:', err))
 
   return {
     success: true,

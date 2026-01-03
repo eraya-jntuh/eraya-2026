@@ -9,9 +9,12 @@ import { supabase } from "@/lib/supabase/client"
 
 const navItems = [
   { label: "MERCHANDISE", href: "#merchandise" },
-  { label: "COMPETITIONS", href: "#events" },
-  { label: "ACCOMMODATION", href: "#accommodation" },
-  { label: "CONTACT US", href: "#contact" },
+  { name: "Events", href: "#events" },
+  { name: "Workshops", href: "#workshops" },
+  { name: "Exhibitions", href: "#exhibitions" },
+  { name: "Pro-Shows", href: "#proshows" },
+  { name: "Sponsors", href: "#sponsors" },
+  { name: "Contact", href: "#contact" },
 ]
 
 export function Navbar() {
@@ -57,9 +60,8 @@ export function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
-          isScrolled ? "glass border-b border-gold/20" : "bg-transparent"
-        }`}
+        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${isScrolled ? "glass border-b border-gold/20" : "bg-transparent"
+          }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           {/* Hamburger Menu */}
@@ -99,7 +101,7 @@ export function Navbar() {
                 <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gold transition-all duration-300 group-hover:w-full group-hover:shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
               </motion.a>
             ))}
-            
+
             {/* Auth Button */}
             {user ? (
               <motion.div
