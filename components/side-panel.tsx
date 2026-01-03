@@ -9,7 +9,7 @@ import { supabase } from "@/lib/supabase/client"
 const mainLinks = [
   { label: "Home", href: "#" },
   { label: "About", href: "#about" },
-  { label: "Clubs", href: "#clubs" },
+  { label: "Events Timeline", href: "#timeline" },
   { label: "Contact", href: "#contact" },
 ]
 
@@ -109,7 +109,7 @@ export function SidePanel({ onClose }: { onClose: () => void }) {
                   </span>
                 </motion.a>
               ))}
-              
+
               {/* Auth Link */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}

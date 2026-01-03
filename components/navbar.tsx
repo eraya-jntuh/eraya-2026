@@ -9,10 +9,7 @@ import { supabase } from "@/lib/supabase/client"
 
 const navItems = [
   { label: "MERCHANDISE", href: "#merchandise" },
-  { name: "Events", href: "#events" },
-  { name: "Workshops", href: "#workshops" },
-  { name: "Exhibitions", href: "#exhibitions" },
-  { name: "Pro-Shows", href: "#proshows" },
+  { name: "Events", href: "#timeline" },
   { name: "Sponsors", href: "#sponsors" },
   { name: "Contact", href: "#contact" },
 ]

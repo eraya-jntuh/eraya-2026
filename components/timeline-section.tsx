@@ -3,7 +3,8 @@
 import { useState, Fragment } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Calendar, MapPin, Download, Clock, ChevronRight, X, ExternalLink, List } from "lucide-react"
-import { LocationModal } from "@/components/ui/location-modal"
+import { MapModal } from "@/components/ui/map-modal"
+import { RegistrationForm } from "@/components/registration-form"
 import { Dialog, Transition } from "@headlessui/react"
 
 type Event = {
@@ -15,8 +16,10 @@ type Event = {
     location: string
     locationDescription: string
     osmLink: string
+    coordinates: [number, number]
     pdfPath?: string
     day: 1 | 2
+    entryFee: string
 }
 
 const events: Event[] = [
@@ -28,7 +31,9 @@ const events: Event[] = [
         location: "J Hub",
         locationDescription: "J Hub is located near the campus main entrance, adjacent to the library block.",
         osmLink: "https://www.openstreetmap.org/search?query=J-Hub%20JNTUH",
-        day: 1
+        coordinates: [17.4938, 78.3920],
+        day: 1,
+        entryFee: "₹100"
     },
     {
         id: "d1-dance",
@@ -38,8 +43,10 @@ const events: Event[] = [
         location: "SIT/Pylon",
         locationDescription: "SIT Auditorium / Pylon Grounds. Follow signs towards the Science & Technology block.",
         osmLink: "https://www.openstreetmap.org/search?query=School%20of%20Information%20Technology%20JNTUH",
+        coordinates: [17.4950, 78.3960],
         pdfPath: "/events/Elite feet Competitions.pdf",
-        day: 1
+        day: 1,
+        entryFee: "₹500"
     },
     {
         id: "d1-standup",
@@ -48,7 +55,9 @@ const events: Event[] = [
         location: "Audi",
         locationDescription: "Main Auditorium, central block.",
         osmLink: "https://www.openstreetmap.org/search?query=JNTUH%20Auditorium",
-        day: 1
+        coordinates: [17.4960, 78.3910],
+        day: 1,
+        entryFee: "₹200"
     },
     {
         id: "d1-amongus",
@@ -58,8 +67,10 @@ const events: Event[] = [
         location: "J Hub",
         locationDescription: "J Hub is located near the campus main entrance, adjacent to the library block.",
         osmLink: "https://www.openstreetmap.org/search?query=J-Hub%20JNTUH",
+        coordinates: [17.4938, 78.3920],
         pdfPath: "/events/Ephemera_Events.pdf",
-        day: 1
+        day: 1,
+        entryFee: "₹100"
     },
 
     // Day 2
@@ -71,8 +82,10 @@ const events: Event[] = [
         location: "Audi",
         locationDescription: "Main Auditorium, central block.",
         osmLink: "https://www.openstreetmap.org/search?query=JNTUH%20Auditorium",
+        coordinates: [17.4960, 78.3910],
         pdfPath: "/events/ChitrKatha.pdf",
-        day: 2
+        day: 2,
+        entryFee: "₹300"
     },
     {
         id: "d2-bob",
@@ -82,8 +95,10 @@ const events: Event[] = [
         location: "Main Stage",
         locationDescription: "Open Air Theatre / Main Stage area.",
         osmLink: "https://www.openstreetmap.org/search?query=JNTUH%20Auditorium", // Fallback to Audi area if main stage not found
+        coordinates: [17.4960, 78.3910],
         pdfPath: "/events/Battle of bands.pdf",
-        day: 2
+        day: 2,
+        entryFee: "₹1000"
     },
     {
         id: "d2-esports",
@@ -92,7 +107,9 @@ const events: Event[] = [
         location: "SIT",
         locationDescription: "SIT Computer Labs, 2nd Floor.",
         osmLink: "https://www.openstreetmap.org/search?query=School%20of%20Information%20Technology%20JNTUH",
-        day: 2
+        coordinates: [17.4950, 78.3960],
+        day: 2,
+        entryFee: "₹200"
     },
     {
         id: "d2-poetry",
@@ -102,27 +119,31 @@ const events: Event[] = [
         location: "J Hub",
         locationDescription: "J Hub is located near the campus main entrance, adjacent to the library block.",
         osmLink: "https://www.openstreetmap.org/search?query=J-Hub%20JNTUH",
+        coordinates: [17.4938, 78.3920],
         pdfPath: "/events/Ephemera_Events.pdf",
-        day: 2
+        day: 2,
+        entryFee: "₹100"
     }
 ]
 
+// ... (imports)
+
 export function TimelineSection() {
     const [activeDay, setActiveDay] = useState<1 | 2>(1)
-    const [selectedLocation, setSelectedLocation] = useState<{ name: string; desc: string } | null>(null)
+    const [selectedLocation, setSelectedLocation] = useState<{ name: string; coordinates: [number, number] } | null>(null)
     const [isAllEventsOpen, setIsAllEventsOpen] = useState(false)
+    const [registrationEvent, setRegistrationEvent] = useState<Event | null>(null)
 
     const filteredEvents = events.filter((e) => e.day === activeDay)
 
     return (
         <section id="timeline" className="relative bg-maroon-dark py-24 overflow-hidden">
-            {/* Dynamic Background */}
+            {/* ... (background and headers same as before) */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-pulse" />
                 <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-maroon/20 rounded-full blur-3xl" />
                 <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5" />
             </div>
-
 
             <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12">
                 <div className="mb-16 text-center">
@@ -147,8 +168,8 @@ export function TimelineSection() {
                                 key={day}
                                 onClick={() => setActiveDay(day as 1 | 2)}
                                 className={`relative rounded-full px-10 py-3 font-display text-sm font-bold tracking-wider transition-all duration-300 ${activeDay === day
-                                        ? "text-maroon-dark shadow-lg scale-105"
-                                        : "text-cream/60 hover:text-cream hover:bg-white/5"
+                                    ? "text-maroon-dark shadow-lg scale-105"
+                                    : "text-cream/60 hover:text-cream hover:bg-white/5"
                                     }`}
                             >
                                 {activeDay === day && (
@@ -200,9 +221,15 @@ export function TimelineSection() {
                                         {event.description}
                                     </p>
 
+                                    <div className="mb-6 flex items-center gap-2">
+                                        <span className="inline-flex items-center rounded-md bg-gold/10 px-2 py-1 text-xs font-medium text-gold ring-1 ring-inset ring-gold/20">
+                                            Entry: {event.entryFee}
+                                        </span>
+                                    </div>
+
                                     <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between border-t border-white/10 pt-6">
                                         <button
-                                            onClick={() => setSelectedLocation({ name: event.location, desc: event.locationDescription })}
+                                            onClick={() => setSelectedLocation({ name: event.location, coordinates: event.coordinates })}
                                             className="flex items-center gap-2 text-sm text-cream/70 hover:text-gold transition-colors group/loc"
                                         >
                                             <MapPin className="h-4 w-4" />
@@ -211,19 +238,25 @@ export function TimelineSection() {
                                             </span>
                                         </button>
 
-                                        {event.pdfPath ? (
-                                            <a
-                                                href={event.pdfPath}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-2 rounded-full bg-gold/10 px-4 py-2 text-xs font-bold tracking-wider text-gold hover:bg-gold hover:text-maroon-dark transition-all duration-300"
+                                        <div className="flex gap-2">
+                                            {event.pdfPath && (
+                                                <a
+                                                    href={event.pdfPath}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center justify-center h-8 w-8 rounded-full border border-gold/30 text-gold hover:bg-gold hover:text-maroon-dark transition-all"
+                                                    title="Download Brochure"
+                                                >
+                                                    <Download className="h-4 w-4" />
+                                                </a>
+                                            )}
+                                            <button
+                                                onClick={() => setRegistrationEvent(event)}
+                                                className="inline-flex items-center gap-2 rounded-full bg-gold px-4 py-2 text-xs font-bold tracking-wider text-maroon-dark hover:bg-white hover:text-maroon transition-all duration-300 shadow-lg hover:shadow-gold/20"
                                             >
-                                                <Download className="h-4 w-4" />
-                                                GUIDELINES
-                                            </a>
-                                        ) : (
-                                            <span className="text-xs text-cream/40 px-4 py-2">Info coming soon</span>
-                                        )}
+                                                REGISTER
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -244,22 +277,39 @@ export function TimelineSection() {
                 </div>
             </div>
 
-            <LocationModal
+            <MapModal
                 isOpen={!!selectedLocation}
                 onClose={() => setSelectedLocation(null)}
                 locationName={selectedLocation?.name || ""}
-                locationDescription={selectedLocation?.desc || ""}
+                coordinates={selectedLocation?.coordinates}
             />
 
-            <AllEventsModal isOpen={isAllEventsOpen} onClose={() => setIsAllEventsOpen(false)} />
+            {registrationEvent && (
+                <RegistrationForm
+                    isOpen={!!registrationEvent}
+                    onClose={() => setRegistrationEvent(null)}
+                    eventName={registrationEvent.title}
+                    entryFee={registrationEvent.entryFee}
+                />
+            )}
+
+            <AllEventsModal
+                isOpen={isAllEventsOpen}
+                onClose={() => setIsAllEventsOpen(false)}
+                onLocationClick={(name, coords) => {
+                    setSelectedLocation({ name, coordinates: coords })
+                }}
+                onRegister={(event) => setRegistrationEvent(event)}
+            />
         </section>
     )
 }
 
-function AllEventsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+function AllEventsModal({ isOpen, onClose, onLocationClick, onRegister }: { isOpen: boolean; onClose: () => void; onLocationClick: (name: string, coords: [number, number]) => void; onRegister: (event: Event) => void }) {
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-[60]" onClose={onClose}>
+                {/* ... (backdrop same as before) */}
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -283,7 +333,7 @@ function AllEventsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-[#1a0505] border border-gold/20 p-8 text-left shadow-2xl transition-all">
+                            <Dialog.Panel className="w-full max-w-5xl transform overflow-hidden rounded-2xl bg-[#1a0505] border border-gold/20 p-8 text-left shadow-2xl transition-all">
                                 <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
                                     <Dialog.Title className="text-3xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-cream to-gold">
                                         ALL EVENTS
@@ -303,7 +353,8 @@ function AllEventsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                                                 <th className="py-4 px-4">Event Name</th>
                                                 <th className="py-4 px-4">Day</th>
                                                 <th className="py-4 px-4">Location</th>
-                                                <th className="py-4 px-4 text-right">Brochure</th>
+                                                <th className="py-4 px-4">Fee</th>
+                                                <th className="py-4 px-4 text-right">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody className="text-cream/80 font-serif">
@@ -319,32 +370,39 @@ function AllEventsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                                                         </span>
                                                     </td>
                                                     <td className="py-4 px-4">
-                                                        <a
-                                                            href={event.osmLink}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="flex items-center gap-2 group/pin hover:text-gold transition-colors"
-                                                            title="View on OpenStreetMaps"
+                                                        <button
+                                                            onClick={() => onLocationClick(event.location, event.coordinates)}
+                                                            className="flex items-center gap-2 group/pin hover:text-gold transition-colors text-left"
+                                                            title="View on Campus Map"
                                                         >
                                                             <MapPin className="h-4 w-4 text-gold/60 group-hover/pin:text-gold" />
                                                             {event.location}
                                                             <ExternalLink className="h-3 w-3 opacity-0 group-hover/pin:opacity-100 transition-opacity" />
-                                                        </a>
+                                                        </button>
+                                                    </td>
+                                                    <td className="py-4 px-4 text-gold/80 font-mono">
+                                                        {event.entryFee}
                                                     </td>
                                                     <td className="py-4 px-4 text-right">
-                                                        {event.pdfPath ? (
-                                                            <a
-                                                                href={event.pdfPath}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="inline-flex items-center justify-center h-8 w-8 rounded-full border border-gold/30 text-gold hover:bg-gold hover:text-maroon-dark transition-all"
-                                                                title="Download Brochure"
+                                                        <div className="flex justify-end gap-3 items-center">
+                                                            {event.pdfPath && (
+                                                                <a
+                                                                    href={event.pdfPath}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-gold/60 hover:text-gold transition-colors"
+                                                                    title="Download Brochure"
+                                                                >
+                                                                    <Download className="h-5 w-5" />
+                                                                </a>
+                                                            )}
+                                                            <button
+                                                                onClick={() => onRegister(event)}
+                                                                className="rounded-full bg-gold/10 px-4 py-2 text-xs font-bold text-gold hover:bg-gold hover:text-maroon-dark transition-all"
                                                             >
-                                                                <Download className="h-4 w-4" />
-                                                            </a>
-                                                        ) : (
-                                                            <span className="text-white/20">-</span>
-                                                        )}
+                                                                REGISTER
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))}
