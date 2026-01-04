@@ -8,31 +8,27 @@ import { Phone, Mail, Instagram, Linkedin, Twitter, Send, Loader2, Check, AlertC
 
 const teamLeads = [
   {
-    name: "Ateeya Mirza",
+    name: "Umme Ateeya",
     role: "Convener",
     phone: "8374285244",
-    email: "[EMAIL_PLACEHOLDER_1]",
     avatar: "/professional-portrait-gradient.jpg"
   },
   {
-    name: "Rhutvich Sharma",
+    name: "Uday Sameer",
     role: "[ROLE_PLACEHOLDER_2]",
-    phone: "[PHONE_PLACEHOLDER_2]",
-    email: "[EMAIL_PLACEHOLDER_2]",
+    phone: "6281958181",
     avatar: "/professional-portrait-gradient.jpg",
   },
   {
-    name: "[LEAD_NAME_PLACEHOLDER_3]",
+    name: "Rhutvich Sharma",
     role: "[ROLE_PLACEHOLDER_3]",
-    phone: "[PHONE_PLACEHOLDER_3]",
-    email: "[EMAIL_PLACEHOLDER_3]",
+    phone: "8500152754",
     avatar: "/professional-portrait-gradient.jpg",
   },
   {
-    name: "[LEAD_NAME_PLACEHOLDER_4]",
+    name: "Parthiv Kondeti",
     role: "[ROLE_PLACEHOLDER_4]",
-    phone: "[PHONE_PLACEHOLDER_4]",
-    email: "[EMAIL_PLACEHOLDER_4]",
+    phone: "9492099999",
     avatar: "/professional-portrait-gradient.jpg",
   },
   {
