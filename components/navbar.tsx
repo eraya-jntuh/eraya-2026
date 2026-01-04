@@ -8,7 +8,6 @@ import { SidePanel } from "./side-panel"
 import { supabase } from "@/lib/supabase/client"
 
 const navItems = [
-  { label: "MERCHANDISE", href: "#merchandise" },
   { label: "COMPETITIONS", href: "#events" },
   { label: "ACCOMMODATION", href: "#accommodation" },
   { label: "CONTACT US", href: "#contact" },

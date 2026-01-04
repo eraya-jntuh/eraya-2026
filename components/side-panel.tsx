@@ -8,20 +8,16 @@ import { supabase } from "@/lib/supabase/client"
 
 const mainLinks = [
   { label: "Home", href: "#" },
-  { label: "About", href: "#about" },
-  { label: "Clubs", href: "#clubs" },
   { label: "Contact", href: "#contact" },
 ]
 
 const events = [
-  "[EVENT_NAME_PLACEHOLDER_1]",
-  "[EVENT_NAME_PLACEHOLDER_2]",
-  "[EVENT_NAME_PLACEHOLDER_3]",
-  "[EVENT_NAME_PLACEHOLDER_4]",
-  "[EVENT_NAME_PLACEHOLDER_5]",
-  "[EVENT_NAME_PLACEHOLDER_6]",
-  "[EVENT_NAME_PLACEHOLDER_7]",
-  "[EVENT_NAME_PLACEHOLDER_8]",
+  "Mic Drop – Poetry Slam",
+  "Literary Among Us",
+  "Battle of Bands",
+  "The Second Take",
+  "Dance Battle",
+  "ChitraKatha – Short Film Contest",
 ]
 
 export function SidePanel({ onClose }: { onClose: () => void }) {

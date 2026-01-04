@@ -8,14 +8,14 @@ import { Phone, Mail, Instagram, Linkedin, Twitter, Send, Loader2, Check, AlertC
 
 const teamLeads = [
   {
-    name: "[LEAD_NAME_PLACEHOLDER_1]",
-    role: "[ROLE_PLACEHOLDER_1]",
-    phone: "[PHONE_PLACEHOLDER_1]",
+    name: "Ateeya Mirza",
+    role: "Convener",
+    phone: "8374285244",
     email: "[EMAIL_PLACEHOLDER_1]",
-    avatar: "/professional-portrait-gradient.jpg",
+    avatar: "/professional-portrait-gradient.jpg"
   },
   {
-    name: "[LEAD_NAME_PLACEHOLDER_2]",
+    name: "Rhutvich Sharma",
     role: "[ROLE_PLACEHOLDER_2]",
     phone: "[PHONE_PLACEHOLDER_2]",
     email: "[EMAIL_PLACEHOLDER_2]",
@@ -33,6 +33,20 @@ const teamLeads = [
     role: "[ROLE_PLACEHOLDER_4]",
     phone: "[PHONE_PLACEHOLDER_4]",
     email: "[EMAIL_PLACEHOLDER_4]",
+    avatar: "/professional-portrait-gradient.jpg",
+  },
+  {
+    name: "[LEAD_NAME_PLACEHOLDER_5]",
+    role: "[ROLE_PLACEHOLDER_5]",
+    phone: "[PHONE_PLACEHOLDER_5]",
+    email: "[EMAIL_PLACEHOLDER_5]",
+    avatar: "/professional-portrait-gradient.jpg",
+  },
+  {
+    name: "[LEAD_NAME_PLACEHOLDER_6]",
+    role: "[ROLE_PLACEHOLDER_6]",
+    phone: "[PHONE_PLACEHOLDER_6]",
+    email: "[EMAIL_PLACEHOLDER_6]",
     avatar: "/professional-portrait-gradient.jpg",
   },
 ]
