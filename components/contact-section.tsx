@@ -10,39 +10,29 @@ const teamLeads = [
   {
     name: "Umme Ateeya",
     role: "Convener",
-    phone: "8374285244",
-    avatar: "/professional-portrait-gradient.jpg"
-  },
-  {
-    name: "Uday Sameer",
-    role: "[ROLE_PLACEHOLDER_2]",
-    phone: "6281958181",
+    phone: "+91 83742 85244",
+    email: "festjntuh@gmail.com",
     avatar: "/professional-portrait-gradient.jpg",
   },
   {
     name: "Rhutvich Sharma",
-    role: "[ROLE_PLACEHOLDER_3]",
-    phone: "8500152754",
+    role: "Sponsorship Lead",
+    phone: "+91 85001 52754",
+    email: "festjntuh@gmail.com",
     avatar: "/professional-portrait-gradient.jpg",
   },
   {
     name: "Parthiv Kondeti",
-    role: "[ROLE_PLACEHOLDER_4]",
-    phone: "9492099999",
+    role: "Joint Convener",
+    phone: "+91 94920 99999",
+    email: "festjntuh@gmail.com",
     avatar: "/professional-portrait-gradient.jpg",
   },
   {
-    name: "[LEAD_NAME_PLACEHOLDER_5]",
-    role: "[ROLE_PLACEHOLDER_5]",
-    phone: "[PHONE_PLACEHOLDER_5]",
-    email: "[EMAIL_PLACEHOLDER_5]",
-    avatar: "/professional-portrait-gradient.jpg",
-  },
-  {
-    name: "[LEAD_NAME_PLACEHOLDER_6]",
-    role: "[ROLE_PLACEHOLDER_6]",
-    phone: "[PHONE_PLACEHOLDER_6]",
-    email: "[EMAIL_PLACEHOLDER_6]",
+    name: "Uday Sameer",
+    role: "Convener",
+    phone: "+91 62819 58181",
+    email: "festjntuh@gmail.com",
     avatar: "/professional-portrait-gradient.jpg",
   },
 ]
@@ -130,9 +120,9 @@ function ContactForm() {
         }
 
         // Generic error
-        setSubmitStatus({ 
-          type: 'error', 
-          message: data.error || 'Failed to send message. Please try again.' 
+        setSubmitStatus({
+          type: 'error',
+          message: data.error || 'Failed to send message. Please try again.'
         })
         setIsSubmitting(false)
         return
@@ -142,16 +132,16 @@ function ContactForm() {
       setSubmitStatus({ type: 'success', message: 'Message sent successfully! We will get back to you soon.' })
       // Reset form
       setFormData({ name: "", email: "", phone: "", message: "" })
-      
+
       // Clear success message after 5 seconds
       setTimeout(() => {
         setSubmitStatus({ type: null, message: '' })
       }, 5000)
     } catch (error: any) {
       console.error('Contact form error:', error)
-      setSubmitStatus({ 
-        type: 'error', 
-        message: 'Network error. Please check your connection and try again.' 
+      setSubmitStatus({
+        type: 'error',
+        message: 'Network error. Please check your connection and try again.'
       })
     } finally {
       setIsSubmitting(false)
@@ -201,11 +191,10 @@ function ContactForm() {
         {/* Status Message */}
         {submitStatus.type && (
           <div
-            className={`rounded-lg border p-3 text-sm ${
-              submitStatus.type === 'success'
+            className={`rounded-lg border p-3 text-sm ${submitStatus.type === 'success'
                 ? 'border-green-500/50 bg-green-500/10 text-green-400'
                 : 'border-red-500/50 bg-red-500/10 text-red-400'
-            }`}
+              }`}
           >
             <div className="flex items-center gap-2">
               {submitStatus.type === 'success' ? (

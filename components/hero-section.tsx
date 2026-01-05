@@ -41,7 +41,7 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="mt-6 max-w-xl font-serif text-lg italic text-gold/90 md:text-xl"
         >
-          [PASTE FEST TAGLINE HERE]
+          Where Culture Meets Innovation
         </motion.p>
 
         {/* Date */}
@@ -56,7 +56,7 @@ export function HeroSection() {
 
         {/* CTA Button */}
         <motion.a
-          href="#events"
+          href="#timeline"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
@@ -78,7 +78,7 @@ export function HeroSection() {
         }}
         className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2"
       >
-        <a href="#events" className="flex flex-col items-center text-gold/60 transition-colors hover:text-gold">
+        <a href="#about" className="flex flex-col items-center text-gold/60 transition-colors hover:text-gold">
           <span className="mb-2 font-serif text-xs uppercase tracking-widest">Scroll</span>
           <ChevronDown className="h-6 w-6" />
         </a>

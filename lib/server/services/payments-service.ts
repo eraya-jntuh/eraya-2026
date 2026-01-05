@@ -10,6 +10,7 @@ import {
 } from '@/lib/server/repos/payments-repo'
 import { getIdempotencyRecord, storeIdempotencyRecord, hashRequest } from '@/lib/server/repos/idempotency-repo'
 import type { PaymentStatus } from '@/lib/server/schemas/payment'
+import { EmailService } from './email-service'
 
 // Initialize Razorpay instance
 function getRazorpayInstance(): Razorpay {
@@ -238,6 +239,27 @@ export async function processPaymentWebhook(event: {
   if (regUpdateError) {
     console.error('Failed to update registration payment status:', regUpdateError)
     // Don't fail the webhook, payment is already updated
+  }
+
+  // Send email notification (Async - fire and forget)
+  // We need registration details for email
+  const { data: registration } = await getRegistrationById(payment.registration_id)
+
+  if (registration) {
+    if (status === 'PAID') {
+      EmailService.sendPaymentSuccessEmail(
+        registration.email,
+        registration.full_name,
+        payment.amount,
+        orderId
+      ).catch(err => console.error('Failed to send payment success email:', err))
+    } else if (status === 'FAILED') {
+      EmailService.sendPaymentFailedEmail(
+        registration.email,
+        registration.full_name,
+        orderId
+      ).catch(err => console.error('Failed to send payment failure email:', err))
+    }
   }
 
   return {
