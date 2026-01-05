@@ -4,7 +4,8 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ArrowLeft, ArrowRight, Copy, Check, QrCode, Loader2 } from "lucide-react"
+import { X, ArrowLeft, ArrowRight, Check, Loader2, CreditCard } from "lucide-react"
+import Script from "next/script"
 
 interface RegistrationFormProps {
   isOpen: boolean
@@ -13,9 +14,14 @@ interface RegistrationFormProps {
   entryFee: string
 }
 
+declare global {
+  interface Window {
+    Razorpay: any
+  }
+}
+
 export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: RegistrationFormProps) {
   const [step, setStep] = useState(1)
-  const [copied, setCopied] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
 
@@ -26,7 +32,6 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
     college: "",
     year: "",
     branch: "",
-    transactionId: "",
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -64,24 +69,19 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
     }
   }
 
-  const handleCopyUPI = () => {
-    navigator.clipboard.writeText("[UPI_ID_PLACEHOLDER]")
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.transactionId.trim()) {
-      setErrors({ transactionId: "Transaction ID is required" })
-      return
-    }
-
+  const handlePayment = async () => {
     setIsSubmitting(true)
     setErrors({})
 
     try {
-      const response = await fetch('/api/registrations', {
+      // 1. Create Registration & Order
+      // We first register the user, then create an order.
+      // However, the backend likely needs a registration ID to create an order.
+      // Let's check api/registrations flow. 
+      // Actually, standard flow: Register -> get ID -> Create Order -> Pay.
+
+      // First, submit registration details
+      const regResponse = await fetch('/api/registrations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,56 +89,79 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
         body: JSON.stringify({
           eventName,
           entryFee,
-          fullName: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          college: formData.college,
-          year: formData.year,
-          branch: formData.branch,
-          transactionId: formData.transactionId,
+          ...formData,
+          // transactionId is no longer needed upfront, will be handled by payments
+          transactionId: "PENDING_RAZORPAY", // Placeholder if schema requires it, or update schema
         }),
       })
 
-      const data = await response.json()
+      const regData = await regResponse.json()
 
-      if (!response.ok) {
-        // Handle validation errors
-        if (response.status === 400 && data.details) {
-          const validationErrors: Record<string, string> = {}
-          data.details.forEach((err: { path: string[]; message: string }) => {
-            const field = err.path[0]
-            validationErrors[field] = err.message
-          })
-          setErrors(validationErrors)
-          setIsSubmitting(false)
-          return
-        }
-
-        // Handle duplicate registration
-        if (response.status === 409) {
-          setErrors({ 
-            email: data.error || 'You have already registered for this event with this email address' 
-          })
-          setIsSubmitting(false)
-          return
-        }
-
-        // Generic error
-        setErrors({ 
-          transactionId: data.error || 'Failed to submit registration. Please try again.' 
-        })
-        setIsSubmitting(false)
-        return
+      if (!regResponse.ok) {
+        throw new Error(regData.error || 'Registration failed')
       }
 
-      // Success
-      setShowSuccess(true)
-    } catch (error: any) {
-      console.error('Registration error:', error)
-      setErrors({ 
-        transactionId: 'Network error. Please check your connection and try again.' 
+      const registrationId = regData.id // Assuming API returns the ID
+
+      // 2. Create Razorpay Order
+      const orderResponse = await fetch('/api/payments/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registrationId,
+          idempotencyKey: `pay_${registrationId}_${Date.now()}`
+        })
       })
-    } finally {
+
+      const orderData = await orderResponse.json()
+
+      if (!orderResponse.ok) {
+        throw new Error(orderData.error || 'Failed to create payment order')
+      }
+
+      // 3. Initialize Razorpay Checkout
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || orderData.keyId, // Try env first, else from server
+        amount: orderData.amount * 100, // Amount in paise
+        currency: orderData.currency,
+        name: "Eraya 2026",
+        description: `Registration for ${eventName}`,
+        image: "/icon.svg", // Ensure this exists
+        order_id: orderData.orderId,
+        handler: function (response: any) {
+          // Payment Success
+          console.log("Payment Successful", response)
+          setIsSubmitting(false)
+          setShowSuccess(true)
+        },
+        prefill: {
+          name: formData.fullName,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        theme: {
+          color: "#8b1538", // Maroon
+        },
+        modal: {
+          ondismiss: function () {
+            setIsSubmitting(false)
+          }
+        }
+      }
+
+      const rzp1 = new window.Razorpay(options)
+      rzp1.on('payment.failed', function (response: any) {
+        console.error("Payment Failed", response.error)
+        setErrors({ payment: `Payment failed: ${response.error.description}` })
+        setIsSubmitting(false)
+      })
+      rzp1.open()
+
+    } catch (error: any) {
+      console.error('Payment flow error:', error)
+      setErrors({
+        payment: error.message || 'Something went wrong. Please try again.'
+      })
       setIsSubmitting(false)
     }
   }
@@ -148,6 +171,12 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
 
   return (
     <AnimatePresence>
+      {/* Razorpay Script */}
+      <Script
+        id="razorpay-checkout-js"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+      />
+
       {isOpen && (
         <>
           {/* Backdrop */}
@@ -308,7 +337,7 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
                           </div>
                         </div>
 
-                        <div>
+                        <div className="mb-4">
                           <label className="mb-1 block font-serif text-sm text-gold/80">Competition</label>
                           <input type="text" value={eventName} disabled className={`${inputClasses} opacity-60`} />
                         </div>
@@ -325,12 +354,11 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
                         </motion.button>
                       </motion.form>
                     ) : (
-                      <motion.form
+                      <motion.div
                         key="step2"
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 20 }}
-                        onSubmit={handleSubmit}
                         className="space-y-6"
                       >
                         {/* Summary */}
@@ -352,51 +380,14 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
                           </div>
                         </div>
 
-                        {/* Payment Section */}
-                        <div>
-                          <h4 className="mb-4 font-display text-lg font-semibold text-gold">Complete Payment</h4>
-
-                          <div className="grid grid-cols-2 gap-4">
-                            {/* UPI ID */}
-                            <div className="rounded-lg border border-gold/30 bg-maroon/50 p-4">
-                              <p className="mb-2 font-serif text-xs text-gold/60">UPI ID</p>
-                              <div className="flex items-center gap-2">
-                                <code className="text-sm text-cream">[UPI_ID_PLACEHOLDER]</code>
-                                <motion.button
-                                  type="button"
-                                  whileHover={{ scale: 1.1 }}
-                                  whileTap={{ scale: 0.9 }}
-                                  onClick={handleCopyUPI}
-                                  className="text-gold"
-                                >
-                                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                                </motion.button>
-                              </div>
-                            </div>
-
-                            {/* QR Code */}
-                            <div className="flex flex-col items-center rounded-lg border border-gold/30 bg-maroon/50 p-4">
-                              <QrCode className="mb-2 h-12 w-12 text-gold/60" />
-                              <p className="font-serif text-xs text-gold/60">Scan QR Code</p>
-                            </div>
+                        {errors.payment && (
+                          <div className="rounded-lg border border-red-500/50 bg-red-900/20 p-3 text-center text-sm text-red-300">
+                            {errors.payment}
                           </div>
+                        )}
 
-                          <p className="mt-4 text-center font-serif text-xs text-cream/60">
-                            Scan QR code or use UPI ID to complete payment
-                          </p>
-                        </div>
-
-                        {/* Transaction ID */}
-                        <div>
-                          <label className="mb-1 block font-serif text-sm text-gold/80">Transaction ID</label>
-                          <input
-                            type="text"
-                            placeholder="Enter transaction ID after payment"
-                            value={formData.transactionId}
-                            onChange={(e) => setFormData({ ...formData, transactionId: e.target.value })}
-                            className={inputClasses}
-                          />
-                          {errors.transactionId && <p className="mt-1 text-xs text-red-400">{errors.transactionId}</p>}
+                        <div className="text-center font-serif text-sm text-cream/70">
+                          Proceed to payment to confirm your registration.
                         </div>
 
                         {/* Buttons */}
@@ -413,7 +404,7 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
                           </motion.button>
 
                           <motion.button
-                            type="submit"
+                            onClick={handlePayment}
                             disabled={isSubmitting}
                             whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                             whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
@@ -422,14 +413,17 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
                             {isSubmitting ? (
                               <>
                                 <Loader2 className="h-4 w-4 animate-spin" />
-                                SUBMITTING...
+                                PROCESSING...
                               </>
                             ) : (
-                              "CONFIRM REGISTRATION"
+                              <>
+                                PAY NOW
+                                <CreditCard className="h-4 w-4" />
+                              </>
                             )}
                           </motion.button>
                         </div>
-                      </motion.form>
+                      </motion.div>
                     )}
                   </AnimatePresence>
                 </>
