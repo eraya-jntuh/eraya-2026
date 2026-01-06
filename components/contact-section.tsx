@@ -9,28 +9,28 @@ import { Phone, Mail, Instagram, Linkedin, Twitter, Send, Loader2, Check, AlertC
 const teamLeads = [
   {
     name: "Umme Ateeya",
-    role: "Convener",
+    //role: "",
     phone: "+91 83742 85244",
     email: "festjntuh@gmail.com",
     avatar: "/professional-portrait-gradient.jpg",
   },
   {
     name: "Rhutvich Sharma",
-    role: "Sponsorship Lead",
+    //role: "Sponsorship Lead",
     phone: "+91 85001 52754",
     email: "festjntuh@gmail.com",
     avatar: "/professional-portrait-gradient.jpg",
   },
   {
     name: "Parthiv Kondeti",
-    role: "Joint Convener",
+    //role: "Joint Convener",
     phone: "+91 94920 99999",
     email: "festjntuh@gmail.com",
     avatar: "/professional-portrait-gradient.jpg",
   },
   {
     name: "Uday Sameer",
-    role: "Convener",
+    //role: "Convener",
     phone: "+91 62819 58181",
     email: "festjntuh@gmail.com",
     avatar: "/professional-portrait-gradient.jpg",
