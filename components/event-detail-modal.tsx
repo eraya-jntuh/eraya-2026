@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ArrowLeft, Calendar, MapPin, Trophy, Users, Ticket, Phone, Info, CreditCard } from "lucide-react"
+import { X, ArrowLeft, Calendar, MapPin, Trophy, Users, Ticket, Phone, Info, CreditCard, Download, ExternalLink } from "lucide-react"
 
 interface EventDetailProps {
   isOpen: boolean
@@ -20,6 +20,7 @@ interface EventDetailProps {
     image?: string
     qrImage?: string
     registerLink?: string
+    pdfPath?: string
     coordinators?: { name: string; phone: string }[]
     paymentInfo?: string
     registrationRequirements?: string
@@ -259,6 +260,24 @@ export function EventDetailModal({ isOpen, onClose, onRegister, event }: EventDe
                           <div>
                             <h4 className="font-serif text-gold text-sm font-semibold">Registration Info</h4>
                             <p className="text-cream/80 text-sm">{event.registrationRequirements}</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {event.pdfPath && (
+                        <div className="flex items-start gap-3 rounded-lg border border-gold/20 bg-gold/5 p-4">
+                          <Download className="mt-1 h-5 w-5 text-gold" />
+                          <div className="flex-1">
+                            <h4 className="font-serif text-gold text-sm font-semibold">Event Rulebook</h4>
+                            <p className="text-cream/80 text-sm mb-2">Download the detailed rulebook for this event.</p>
+                            <a
+                              href={event.pdfPath}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-xs font-bold text-gold hover:underline underline-offset-4"
+                            >
+                              DOWNLOAD PDF <ExternalLink className="h-3 w-3" />
+                            </a>
                           </div>
                         </div>
                       )}

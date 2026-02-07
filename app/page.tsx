@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/navbar"
 import { HeroSection } from "@/components/hero-section"
+import { HighlightsSection } from "@/components/highlights-section"
 import { AboutSection } from "@/components/about-section"
 import { TimelineSection } from "@/components/timeline-section"
 import { SponsorsSection } from "@/components/sponsors-section"
@@ -12,6 +13,7 @@ export default function Home() {
     <main className="min-h-screen bg-maroon text-cream selection:bg-gold selection:text-maroon">
       <Navbar />
       <HeroSection />
+      <HighlightsSection />
       <AboutSection />
       <TimelineSection />
       <SponsorsSection />

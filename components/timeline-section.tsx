@@ -140,6 +140,19 @@ const events: Event[] = [
         entryFee: "₹100",
         registerLink: "https://forms.gle/D7rvzn2RUPZ6YHUn8",
         qrImage: "/qrs/poets.jfif"
+    },
+    {
+        id: "d2-proshow",
+        title: "Pro Show Concert",
+        subtitle: "(Live)",
+        description: "Experience the magic of live music with our star artist.",
+        location: "OAT",
+        locationDescription: "Open Air Theatre.",
+        osmLink: "https://www.google.com/maps/place/Jawaharlal+Nehru+Auditorium/@17.492585,78.3917281,18.71z",
+        coordinates: [17.4960, 78.3910],
+        day: 2,
+        entryFee: "₹499",
+        registerLink: "#highlights" // Redirects back to highlights for Pass? Or is it separate? Assuming Pass covers it or separate reg.
     }
 ]
 
@@ -197,7 +210,7 @@ export function TimelineSection() {
                                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                     />
                                 )}
-                                <span className="relative z-10">DAY {day} (JAN {day === 1 ? '30' : '31'})</span>
+                                <span className="relative z-10">DAY {day} (FEB {day === 1 ? '26' : '27'})</span>
                             </button>
                         ))}
                     </div>

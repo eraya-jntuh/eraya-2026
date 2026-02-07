@@ -4,8 +4,9 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ArrowLeft, ArrowRight, Check, Loader2, CreditCard } from "lucide-react"
+import { X, ArrowLeft, ArrowRight, Check, Loader2, CreditCard, Download, MessageCircle } from "lucide-react"
 import Script from "next/script"
+import QRCode from "react-qr-code"
 
 interface RegistrationFormProps {
   isOpen: boolean
@@ -25,6 +26,7 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee, registe
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [registrationId, setRegistrationId] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -42,6 +44,7 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee, registe
       document.body.style.overflow = "hidden"
       setStep(1)
       setShowSuccess(false)
+      setRegistrationId(null)
     }
     return () => {
       document.body.style.overflow = ""
@@ -133,6 +136,7 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee, registe
           // Payment Success
           console.log("Payment Successful", response)
           setIsSubmitting(false)
+          setRegistrationId(registrationId) // Set ID for QR generation
           setShowSuccess(true)
         },
         prefill: {
@@ -240,21 +244,68 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee, registe
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="py-8 text-center"
+                  className="py-8 text-center flex flex-col items-center"
                 >
                   <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 text-green-400">
                     <Check className="h-8 w-8" />
                   </div>
                   <h3 className="mb-2 font-display text-2xl font-bold text-gold">Registration Successful!</h3>
                   <p className="mb-6 text-cream/70">You have successfully registered for {eventName}</p>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={onClose}
-                    className="rounded-lg bg-gold px-8 py-3 font-display text-sm tracking-wider text-maroon-dark"
-                  >
-                    CLOSE
-                  </motion.button>
+
+                  {/* QR Code Section for Entry Pass or if registration ID exists */}
+                  {registrationId && (
+                    <div className="mb-8 p-4 bg-white rounded-xl shadow-xl border-4 border-gold/20" id="qr-pass">
+                      <QRCode
+                        value={JSON.stringify({
+                          id: registrationId,
+                          name: formData.fullName,
+                          event: eventName
+                        })}
+                        size={200}
+                      />
+                      <div className="mt-2 text-xs font-mono text-black/60 uppercase tracking-widest">{registrationId.slice(0, 8)}</div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-4">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={onClose}
+                      className="rounded-lg border border-gold/50 px-8 py-3 font-display text-sm tracking-wider text-gold hover:bg-gold/10"
+                    >
+                      CLOSE
+                    </motion.button>
+                    {registrationId && (
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          // Simple print for now, or user can screenshot
+                          window.print()
+                        }}
+                        className="flex items-center gap-2 rounded-lg bg-gold px-8 py-3 font-display text-sm tracking-wider text-maroon-dark hover:bg-gold-light"
+                      >
+                        <Download className="h-4 w-4" />
+                        SAVE PASS
+                      </motion.button>
+                    )}
+                    {registrationId && (
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          const text = `I just registered for ${eventName} at Eraya 2026! Here is my Entry Pass ID: ${registrationId}. Get yours now!`;
+                          const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+                          window.open(url, '_blank');
+                        }}
+                        className="flex items-center gap-2 rounded-lg border border-green-500/50 bg-green-500/10 px-8 py-3 font-display text-sm tracking-wider text-green-400 hover:bg-green-500 hover:text-white"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        WHATSAPP
+                      </motion.button>
+                    )}
+                  </div>
                 </motion.div>
               ) : (
                 <>

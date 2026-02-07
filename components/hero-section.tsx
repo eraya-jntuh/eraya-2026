@@ -51,12 +51,12 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 1 }}
           className="mt-8 font-serif text-lg tracking-widest text-cream/80 md:text-xl"
         >
-          January 30-31, 2026
+          February 26-27, 2026
         </motion.div>
 
         {/* CTA Button */}
         <motion.a
-          href="#timeline"
+          href="#highlights"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}

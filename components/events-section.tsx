@@ -19,13 +19,14 @@ const events = [
       "No props or background music unless explicitly specified by organizers.",
       "Content must be appropriate and respectful."
     ],
-    date: "Coming Soon",
+    date: "Feb 27, 2026",
     venue: "Coming Soon",
     prizePool: "To be announced",
     teamSize: "Solo",
-    entryFee: "₹ 150", 
+    entryFee: "₹ 150",
     registerLink: "https://forms.gle/D7rvzn2RUPZ6YHUn8",
     qrImage: "/qrs/poets.jfif",
+    pdfPath: "/events/Ephemera_Events.pdf",
     coordinators: [
       { name: "Coordinator Name", phone: "Phone Number" }
     ],
@@ -46,15 +47,16 @@ const events = [
       "Final decisions must be justified with reasoning.",
       "The event concludes with a final role reveal."
     ],
-    date: "Coming Soon",
+    date: "Feb 26, 2026",
     venue: "Coming Soon",
     prizePool: "To be announced",
     teamSize: "Solo",
     entryFee: "₹ 99",
     registerLink: "https://forms.gle/FpLMfSLsDWJue8TaA",
     qrImage: "/qrs/spylance.jfif",
+    pdfPath: "/events/Ephemera_Events.pdf",
     coordinators: [
-        { name: "Coordinator Name", phone: "Phone Number" }
+      { name: "Coordinator Name", phone: "Phone Number" }
     ],
     paymentInfo: "Payment will be handled via the Google Form.",
     registrationRequirements: "Please have your details ready.",
@@ -79,15 +81,16 @@ const events = [
       "A standard 5-piece drum kit with a single kick pedal will be provided.",
       "Bands may bring their own double kick pedal if required."
     ],
-    date: "Coming Soon",
+    date: "Feb 27, 2026",
     venue: "Coming Soon",
     prizePool: "To be announced",
     teamSize: "3–8 Members",
     entryFee: "₹ 1500",
     registerLink: "https://forms.gle/vmxRu4exixwKucU89",
     qrImage: "/qrs/bob.jfif",
+    pdfPath: "/events/Battle of bands.pdf",
     coordinators: [
-        { name: "Coordinator Name", phone: "Phone Number" }
+      { name: "Coordinator Name", phone: "Phone Number" }
     ],
     paymentInfo: "Payment will be handled via the Google Form.",
     registrationRequirements: "Please have your details ready.",
@@ -109,15 +112,15 @@ const events = [
       "Late reporting may result in point deduction.",
       "Judges’ decisions are final and binding."
     ],
-    date: "Coming Soon",
+    date: "Feb 26, 2026",
     venue: "Coming Soon",
     prizePool: "To be announced",
-    teamSize: "4-8 Members", 
+    teamSize: "4-8 Members",
     entryFee: "₹ 500",
     registerLink: "https://forms.gle/gmdCSvMksRF4fSV3A",
     qrImage: "/qrs/second_take.jfif",
     coordinators: [
-        { name: "Coordinator Name", phone: "Phone Number" }
+      { name: "Coordinator Name", phone: "Phone Number" }
     ],
     paymentInfo: "Payment will be handled via the Google Form.",
     registrationRequirements: "Please have your details ready.",
@@ -132,8 +135,8 @@ const events = [
       "Permitted styles include Western, Hip-Hop, Popping, Breaking, Locking, Whacking, and other street styles.",
       "Classical, folk, and mass beat styles are not permitted.",
       "The event follows a knockout tournament format.",
-      "Division A and Division B knockouts will be held on Day 01.",
-      "Winners of both divisions will face off in the Grand Finale on Day 02.",
+      "Division A and Division B knockouts will be held on Feb 26.",
+      "Winners of both divisions will face off in the Grand Finale on Feb 27.",
       "Each team performance is limited to 3 minutes in knockout rounds.",
       "Grand Finale performances may extend up to 7 minutes.",
       "Obscene or vulgar gestures, costumes, or expressions will result in immediate disqualification.",
@@ -141,15 +144,16 @@ const events = [
       "Teams must report backstage at least 30 minutes before their performance.",
       "Judges’ decisions are final and binding."
     ],
-    date: "Coming Soon",
+    date: "Feb 26, 2026",
     venue: "Coming Soon",
     prizePool: "To be announced",
     teamSize: "4–8 Members",
     entryFee: "₹ 500",
     registerLink: "https://forms.gle/WRHN5GUyZ694ZR1LA",
     qrImage: "/qrs/dance.jfif",
+    pdfPath: "/events/Elite feet Competitions.pdf",
     coordinators: [
-        { name: "Coordinator Name", phone: "Phone Number" }
+      { name: "Coordinator Name", phone: "Phone Number" }
     ],
     paymentInfo: "Payment will be handled via the Google Form.",
     registrationRequirements: "Please have your details ready.",
@@ -173,15 +177,16 @@ const events = [
       "Organizers’ and judges’ decisions are final.",
       "By submitting, participants grant the college the right to screen their films."
     ],
-    date: "Coming Soon",
-    venue:  "Coming Soon",
+    date: "Feb 27, 2026",
+    venue: "Coming Soon",
     prizePool: "To be announced",
     teamSize: "Solo/Team",
     entryFee: "₹ 200",
     registerLink: "https://forms.gle/LXNnn1Y2dBkGEv7b7",
     qrImage: "/qrs/chtrakatha.jfif",
+    pdfPath: "/events/ChitrKatha.pdf",
     coordinators: [
-        { name: "Coordinator Name", phone: "Phone Number" }
+      { name: "Coordinator Name", phone: "Phone Number" }
     ],
     paymentInfo: "Payment will be handled via the Google Form.",
     registrationRequirements: "Please have your details ready.",
@@ -192,13 +197,13 @@ const events = [
     name: "Meme Wars",
     description: "A battle of wits and humor where participants create memes on the spot based on given themes or templates. The funniest, most relatable, and creative memes win.",
     rules: [
-        "Individual participation only.",
-        "Memes must be original and created during the event.",
-        "Usage of pre-made templates is allowed, but content must be original.",
-        "Offensive, discriminatory, or political content is strictly prohibited.",
-        "Judges' decision will be final."
+      "Individual participation only.",
+      "Memes must be original and created during the event.",
+      "Usage of pre-made templates is allowed, but content must be original.",
+      "Offensive, discriminatory, or political content is strictly prohibited.",
+      "Judges' decision will be final."
     ],
-    date: "Coming Soon",
+    date: "Feb 26, 2026",
     venue: "Coming Soon",
     prizePool: "To be announced",
     teamSize: "Solo",
@@ -206,7 +211,7 @@ const events = [
     registerLink: "https://forms.gle/9bn7zRYaZ91GD5HC8",
     qrImage: "/qrs/meme_wars.jfif",
     coordinators: [
-        { name: "Coordinator Name", phone: "Phone Number" }
+      { name: "Coordinator Name", phone: "Phone Number" }
     ],
     paymentInfo: "Payment will be handled via the Google Form.",
     registrationRequirements: "Please have your details ready.",
@@ -217,13 +222,13 @@ const events = [
     name: "Charcha-E-Ad",
     description: "An advertisement making competition where creativity meets marketing. Teams must create a compelling ad for a product, service, or concept, showcasing their ability to sell an idea.",
     rules: [
-        "Team size: 2-4 members.",
-        "Time limit for ad: 1-2 minutes.",
-        "Teams must bring their own props if required.",
-        "The product/topic will be given on the spot or notified prior.",
-        "Creativity, humor, and message clarity will be judged."
+      "Team size: 2-4 members.",
+      "Time limit for ad: 1-2 minutes.",
+      "Teams must bring their own props if required.",
+      "The product/topic will be given on the spot or notified prior.",
+      "Creativity, humor, and message clarity will be judged."
     ],
-    date: "Coming Soon",
+    date: "Feb 26, 2026",
     venue: "Coming Soon",
     prizePool: "To be announced",
     teamSize: "2-4 Members",
@@ -231,7 +236,7 @@ const events = [
     registerLink: "https://forms.gle/QfQEJ8S2oew2XHqq6",
     qrImage: "/qrs/chacha_ed.jfif",
     coordinators: [
-        { name: "Coordinator Name", phone: "Phone Number" }
+      { name: "Coordinator Name", phone: "Phone Number" }
     ],
     paymentInfo: "Payment will be handled via the Google Form.",
     registrationRequirements: "Please have your details ready.",

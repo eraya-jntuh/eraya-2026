@@ -52,42 +52,30 @@ export async function submitRegistration(
   }
 
   // Step 4: Insert registration with server-side entry fee
-  const { error } = await insertRegistration({
+  const { data: registration, error } = await insertRegistration({
     ...input,
     entryFee: feeResult.fee.toString(), // Store server-calculated fee
     userAgent: input.userAgent,
     ip: input.ip,
   })
 
-  if (error) {
-    return { success: false, error: error.message || 'Failed to save registration' }
+  if (error || !registration) {
+    return { success: false, error: error?.message || 'Failed to save registration' }
   }
 
   // Step 5: Store idempotency record if key provided
   if (input.idempotencyKey) {
     const requestHash = hashRequest(input)
-    const responseBody = JSON.stringify({ success: true, message: 'Registration submitted successfully' })
+    const responseBody = JSON.stringify({ success: true, message: 'Registration submitted successfully', registrationId: registration.id })
     await storeIdempotencyRecord(input.idempotencyKey, requestHash, 201, responseBody)
   }
 
   // Step 6: Send confirmation email (Async - fire and forget)
   // We don't await this to keep response fast
-  /* const { EmailService } = await import('./email-service'); 
-     Dynamic import to avoid circular dep if any, but standard import should be fine 
-     if email-service doesn't import this.
-     Actually, let's use standard import.
-  */
-
-  // Checking imports... registration-service doesn't seem to have circular deps with email-service.
-  // Adding the import at the top is cleaner, but I'll add the call here.
-  // Wait, I need to add the import statement at the top of the file too.
-
-  // Since replace_file_content works on a block, I should probably use multi_replace.
-  // I will restart this call with multi_replace.
-
-  // Step 6: Send confirmation email (Async - fire and forget)
-  EmailService.sendRegistrationEmail(input.email, input.fullName, input.eventName)
-    .catch(err => console.error('Failed to send registration email:', err))
+  if (registration && registration.id) {
+    EmailService.sendRegistrationEmail(input.email, input.fullName, input.eventName, registration.id)
+      .catch((err: unknown) => console.error('Failed to send registration email:', err))
+  }
 
   return {
     success: true,
@@ -95,5 +83,3 @@ export async function submitRegistration(
     idempotencyKey: input.idempotencyKey,
   }
 }
-
-

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Cinzel, Playfair_Display, Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
+import { LiveEventTicker } from "@/components/live-event-ticker"
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -51,6 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${cinzel.variable} ${playfair.variable} ${inter.variable} font-sans antialiased`}>
+        <LiveEventTicker />
         {children}
         <Analytics />
       </body>

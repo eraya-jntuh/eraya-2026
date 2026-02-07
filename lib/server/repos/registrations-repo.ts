@@ -2,7 +2,7 @@ import { createServerClient } from '@/lib/supabase/server'
 import type { RegistrationInput } from '@/lib/server/schemas/registration'
 
 export async function insertRegistration(
-  input: RegistrationInput & { 
+  input: RegistrationInput & {
     userAgent: string | null
     ip: string | null
     entryFee: string // Now required - server-calculated
@@ -22,7 +22,7 @@ export async function insertRegistration(
     user_agent: input.userAgent,
     ip: input.ip,
     payment_status: 'PENDING', // Default payment status
-  })
+  }).select().single()
 }
 
 /**

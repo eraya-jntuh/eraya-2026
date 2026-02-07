@@ -137,6 +137,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-maroon text-foreground;
   }
@@ -145,13 +146,16 @@
   ::-webkit-scrollbar {
     width: 8px;
   }
+
   ::-webkit-scrollbar-track {
     background: var(--maroon-dark);
   }
+
   ::-webkit-scrollbar-thumb {
     background: var(--gold);
     border-radius: 4px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: var(--gold-light);
   }
@@ -189,4 +193,49 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #qr-pass,
+  #qr-pass * {
+    visibility: visible;
+  }
+
+  #qr-pass {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 400px;
+    margin: 0;
+    padding: 20px;
+    border: 2px solid black;
+    box-shadow: none;
+    background: white;
+    color: black;
+  }
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
