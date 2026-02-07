@@ -12,6 +12,7 @@ interface RegistrationFormProps {
   onClose: () => void
   eventName: string
   entryFee: string
+  registerLink?: string
 }
 
 declare global {
@@ -20,7 +21,7 @@ declare global {
   }
 }
 
-export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: RegistrationFormProps) {
+export function RegistrationForm({ isOpen, onClose, eventName, entryFee, registerLink }: RegistrationFormProps) {
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -196,7 +197,7 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="fixed inset-4 z-[9999] flex items-center justify-center overflow-y-auto md:inset-8"
           >
-            <div className="glass relative w-full max-w-lg rounded-2xl border-2 border-gold/40 bg-maroon-dark/95 p-6 md:p-8">
+            <div className={`glass relative w-full ${registerLink ? 'max-w-4xl h-[85vh]' : 'max-w-lg'} rounded-2xl border-2 border-gold/40 bg-maroon-dark/95 p-6 md:p-8 flex flex-col`}>
               {/* Corner decorations */}
               <div className="absolute left-0 top-0 h-10 w-10 border-l-2 border-t-2 border-gold/50 rounded-tl-2xl" />
               <div className="absolute right-0 top-0 h-10 w-10 border-r-2 border-t-2 border-gold/50 rounded-tr-2xl" />
@@ -208,13 +209,34 @@ export function RegistrationForm({ isOpen, onClose, eventName, entryFee }: Regis
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={onClose}
-                className="absolute right-4 top-4 text-gold transition-colors hover:text-gold-light"
+                className="absolute right-4 top-4 text-gold transition-colors hover:text-gold-light z-10"
               >
                 <X className="h-5 w-5" />
               </motion.button>
 
-              {/* Success State */}
-              {showSuccess ? (
+              {registerLink ? (
+                <div className="flex flex-1 min-h-0 w-full flex-col overflow-hidden rounded-xl bg-white mt-8">
+                  <div className="flex items-center justify-between border-b bg-gray-50 px-4 py-2 shrink-0">
+                    <span className="text-xs text-gray-500">Form not loading?</span>
+                    <a
+                      href={registerLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline"
+                    >
+                      Open in New Tab
+                    </a>
+                  </div>
+                  <iframe
+                    src={registerLink}
+                    className="flex-1 w-full border-0"
+                    title="Registration Form"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                  >
+                    Loading...
+                  </iframe>
+                </div>
+              ) : showSuccess ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}

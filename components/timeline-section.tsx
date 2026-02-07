@@ -2,8 +2,9 @@
 
 import { useState, Fragment } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Calendar, MapPin, Download, Clock, ChevronRight, X, ExternalLink, List } from "lucide-react"
+import { Calendar, MapPin, Download, Clock, ChevronRight, X, ExternalLink, List, QrCode } from "lucide-react"
 import { MapModal } from "@/components/ui/map-modal"
+import { QRModal } from "@/components/ui/qr-modal"
 import { RegistrationForm } from "@/components/registration-form"
 import { Dialog, Transition } from "@headlessui/react"
 
@@ -20,20 +21,24 @@ type Event = {
     pdfPath?: string
     day: 1 | 2
     entryFee: string
+    registerLink?: string
+    qrImage?: string
 }
 
 const events: Event[] = [
     // Day 1
     {
         id: "d1-admaking",
-        title: "Ad Making",
+        title: "Charcha-E-Ad",
         description: "Showcase your creativity by crafting compelling advertisements that capture attention.",
         location: "J Hub",
         locationDescription: "J Hub is located right next to ECE block, and near a temple.",
         osmLink: "https://www.google.com/maps/place/JNTUH+Innovation+Foundation/@17.4936812,78.392561,19z/data=!3m1!5s0x3bcb91f2dbc7b6dd:0x45cb91aeef077bf!4m6!3m5!1s0x3bcb90b93473ffff:0xcf4fc074d025ed9b!8m2!3d17.4936133!4d78.3932531!16s%2Fg%2F11sbx1kll4?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D",
         coordinates: [17.4938, 78.3920],
         day: 1,
-        entryFee: "₹100"
+        entryFee: "₹100",
+        registerLink: "https://forms.gle/QfQEJ8S2oew2XHqq6",
+        qrImage: "/qrs/chacha_ed.jfif"
     },
     {
         id: "d1-dance",
@@ -46,7 +51,9 @@ const events: Event[] = [
         coordinates: [17.4950, 78.3960],
         pdfPath: "/events/Elite feet Competitions.pdf",
         day: 1,
-        entryFee: "₹500"
+        entryFee: "₹500",
+        registerLink: "https://forms.gle/WRHN5GUyZ694ZR1LA",
+        qrImage: "/qrs/dance.jfif"
     },
     {
         id: "d1-standup",
@@ -57,7 +64,8 @@ const events: Event[] = [
         osmLink: "https://www.google.com/maps/place/Jawaharlal+Nehru+Auditorium/@17.492585,78.3917281,18.71z/data=!4m6!3m5!1s0x3bcb91f3437ed8fd:0xbee11a361107ae67!8m2!3d17.491994!4d78.3914272!16s%2Fg%2F124ygf50z?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D",
         coordinates: [17.4960, 78.3910],
         day: 1,
-        entryFee: "₹200"
+        entryFee: "₹200",
+        registerLink: "https://docs.google.com/forms/d/e/1FAIpQLSdcF2M-y2uT2S2W2T2R2S2W2T2R2S2W/viewform" // Placeholder
     },
     {
         id: "d1-amongus",
@@ -70,7 +78,9 @@ const events: Event[] = [
         coordinates: [17.4938, 78.3920],
         pdfPath: "/events/Ephemera_Events.pdf",
         day: 1,
-        entryFee: "₹100"
+        entryFee: "₹100",
+        registerLink: "https://forms.gle/FpLMfSLsDWJue8TaA",
+        qrImage: "/qrs/spylance.jfif"
     },
 
     // Day 2
@@ -85,7 +95,9 @@ const events: Event[] = [
         coordinates: [17.4960, 78.3910],
         pdfPath: "/events/ChitrKatha.pdf",
         day: 2,
-        entryFee: "₹300"
+        entryFee: "₹300",
+        registerLink: "https://forms.gle/LXNnn1Y2dBkGEv7b7",
+        qrImage: "/qrs/chtrakatha.jfif"
     },
     {
         id: "d2-bob",
@@ -98,7 +110,9 @@ const events: Event[] = [
         coordinates: [17.4960, 78.3910],
         pdfPath: "/events/Battle of bands.pdf",
         day: 2,
-        entryFee: "₹1000"
+        entryFee: "₹1000",
+        registerLink: "https://forms.gle/vmxRu4exixwKucU89",
+        qrImage: "/qrs/bob.jfif"
     },
     {
         id: "d2-esports",
@@ -109,7 +123,8 @@ const events: Event[] = [
         osmLink: "https://www.google.com/maps/place/School+of+Information+Technology/@17.4951714,78.3925826,19.75z/data=!4m6!3m5!1s0x3bcb91f33338e551:0x62f4311dfd1bfc00!8m2!3d17.4952937!4d78.3928709!16s%2Fg%2F1tdzj_yf?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D",
         coordinates: [17.4950, 78.3960],
         day: 2,
-        entryFee: "₹200"
+        entryFee: "₹200",
+        registerLink: "https://docs.google.com/forms/d/e/1FAIpQLSdcF2M-y2uT2S2W2T2R2S2W2T2R2S2W/viewform" // Placeholder
     },
     {
         id: "d2-poetry",
@@ -122,7 +137,9 @@ const events: Event[] = [
         coordinates: [17.4938, 78.3920],
         pdfPath: "/events/Ephemera_Events.pdf",
         day: 2,
-        entryFee: "₹100"
+        entryFee: "₹100",
+        registerLink: "https://forms.gle/D7rvzn2RUPZ6YHUn8",
+        qrImage: "/qrs/poets.jfif"
     }
 ]
 
@@ -133,6 +150,7 @@ export function TimelineSection() {
     const [selectedLocation, setSelectedLocation] = useState<{ name: string; coordinates: [number, number] } | null>(null)
     const [isAllEventsOpen, setIsAllEventsOpen] = useState(false)
     const [registrationEvent, setRegistrationEvent] = useState<Event | null>(null)
+    const [qrEvent, setQrEvent] = useState<Event | null>(null)
 
     const filteredEvents = events.filter((e) => e.day === activeDay)
 
@@ -239,6 +257,15 @@ export function TimelineSection() {
                                         </button>
 
                                         <div className="flex gap-2">
+                                            {event.qrImage && (
+                                                <button
+                                                    onClick={() => setQrEvent(event)}
+                                                    className="inline-flex items-center justify-center h-8 w-8 rounded-full border border-gold/30 text-gold hover:bg-gold hover:text-maroon-dark transition-all"
+                                                    title="View QR Code"
+                                                >
+                                                    <QrCode className="h-4 w-4" />
+                                                </button>
+                                            )}
                                             {event.pdfPath && (
                                                 <a
                                                     href={event.pdfPath}
@@ -290,6 +317,17 @@ export function TimelineSection() {
                     onClose={() => setRegistrationEvent(null)}
                     eventName={registrationEvent.title}
                     entryFee={registrationEvent.entryFee}
+                    registerLink={registrationEvent.registerLink}
+                />
+            )}
+
+            {qrEvent && (
+                <QRModal
+                    isOpen={!!qrEvent}
+                    onClose={() => setQrEvent(null)}
+                    eventName={qrEvent.title}
+                    qrImage={qrEvent.qrImage}
+                    registerLink={qrEvent.registerLink}
                 />
             )}
 
